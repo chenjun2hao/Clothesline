@@ -1,0 +1,58 @@
+{
+  "name": "clothesline",
+  "version": "0.2.0",
+  "description": "Clothesline · 晾衣绳 — 把刚下载完成的真实文件挂在屏幕顶部（Electron + Node.js 跨平台版）",
+  "main": "src/main/main.js",
+  "author": "Clothesline",
+  "license": "MIT",
+  "homepage": "https://github.com/zhongguozhang/Clothesline",
+  "scripts": {
+    "start": "electron .",
+    "start:linux": "electron . --no-sandbox --disable-gpu-sandbox",
+    "test": "node --test tests/*.test.js",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.clothesline.app",
+    "productName": "Clothesline",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "Clothesline/assets/clothesline-icon.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ],
+      "icon": "Clothesline/assets/clothesline-icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Clothesline"
+    },
+    "linux": {
+      "target": [
+        { "target": "AppImage", "arch": ["x64"] },
+        { "target": "deb", "arch": ["x64"] }
+      ],
+      "icon": "build/icons",
+      "category": "Utility",
+      "maintainer": "Clothesline <clothesline@example.com>",
+      "synopsis": "把刚下载完成的文件挂在屏幕顶部"
+    }
+  }
+}

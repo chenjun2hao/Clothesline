@@ -1,4 +1,18 @@
-.build/
-build/
+# ---- 依赖（别人用 npm install 自己装）----
+node_modules/
+
+# ---- 构建产物（用 GitHub Releases 分发，不进仓库）----
+dist/
+out/
+
+# ---- macOS 原版（Swift）：不提交 ----
+# Clothesline/ 内含上游克隆自带的 .git，Git 会把它识别成嵌套仓库（子模块），
+# 忽略规则拦不住，所以整目录忽略；打包需要的那个图标用 git add -f 单独加入。
+Clothesline/
+
+# ---- 系统 / 编辑器 ----
 .DS_Store
+Thumbs.db
 *.log
+.vscode/
+.idea/

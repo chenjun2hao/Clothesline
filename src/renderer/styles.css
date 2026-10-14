@@ -1,0 +1,298 @@
+/* Clothesline 顶部浮层样式
+ * 视觉常量按时长与比例与 macOS (SwiftUI) 版一一对应，
+ * 所有尺寸通过 CSS 变量注入，Windows / Linux 使用同一套样式，效果一致。 */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", "Noto Sans SC", "Noto Sans CJK SC",
+    "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "WenQuanYi Micro Hei",
+    "Droid Sans Fallback", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+/* ---- 整条晾衣绳：显示 / 收起 ---- */
+#line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--panel-h);
+  transform: translateY(0);
+  transition: transform 0.42s cubic-bezier(0.22, 1.18, 0.36, 1);
+  will-change: transform;
+}
+
+#line.hidden {
+  transform: translateY(calc(-1 * (var(--panel-h) + 12px)));
+  transition: transform 0.22s ease-in;
+}
+
+#rope {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--panel-h);
+  pointer-events: none;
+}
+
+/* ---- 毛玻璃通用外观（近似 macOS 的 ultraThinMaterial） ---- */
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.80), rgba(255, 255, 255, 0.62));
+  box-shadow:
+    inset 0 0.75px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -0.75px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.10);
+}
+
+/* ---- 空状态提示 ---- */
+#empty {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.52);
+  white-space: nowrap;
+  display: none;
+  /* 与 macOS 的 Capsule + .regularMaterial 一致：浅色半透明胶囊底，
+     避免深色文字直接压在桌面壁纸上时看不见。 */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.80), rgba(255, 255, 255, 0.62));
+  box-shadow:
+    inset 0 0.75px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -0.75px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.10);
+}
+
+#empty.show { display: block; }
+
+/* ---- “最近文件”按钮 ---- */
+#recentBtn {
+  position: absolute;
+  left: calc(var(--width) - 70px);
+  top: calc(var(--panel-h) - 30px);
+  transform: translate(-50%, -50%);
+  padding: 8px;
+  border: none;
+  border-radius: 999px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.78);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+#line.revealed #recentBtn { opacity: 1; pointer-events: auto; }
+
+#recentBtn:hover { background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.76)); }
+
+#recentBtn .ico { display: inline-flex; align-items: center; }
+
+/* ---- 被夹住的卡片 ---- */
+#cards { position: absolute; inset: 0; }
+
+.pegged {
+  position: absolute;
+  transform-origin: top center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform;
+}
+
+/* 卡片“落下”的入场动画放在内层，避免与夹子的摆动旋转互相干扰。 */
+.arrive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(-46px);
+  opacity: 0;
+  transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.30s ease;
+}
+
+.pegged.arrived .arrive {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* 夹子 */
+.pin {
+  position: relative;
+  width: 9px;
+  height: 26px;
+  border-radius: 3.5px;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--tint), 0.82) 0%,
+    rgba(var(--tint), 1) 35%,
+    rgba(var(--tint), 0.92) 65%,
+    rgba(var(--tint), 1) 100%
+  );
+  box-shadow: 0 1.5px 2px rgba(0, 0, 0, 0.30);
+  z-index: 1;
+}
+
+.pin::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 3.5px;
+  padding: 0.6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0.18));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8.5px;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 1.4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.32);
+}
+
+/* 卡片本体 */
+.card {
+  position: relative;
+  margin-top: -12px;
+  width: calc(var(--card-w) - 8px);
+  padding: 6px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform-origin: top center;
+  transform: scale(1);
+  transition: transform 0.30s cubic-bezier(0.2, 0.9, 0.3, 1.12), box-shadow 0.3s ease;
+  box-shadow:
+    inset 0 0.75px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -0.75px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.10),
+    0 5px 10px rgba(0, 0, 0, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.80), rgba(255, 255, 255, 0.62));
+}
+
+.card.hover {
+  transform: scale(1.035);
+  box-shadow:
+    inset 0 0.75px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -0.75px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 0 0.5px rgba(0, 0, 0, 0.10),
+    0 8px 14px rgba(0, 0, 0, 0.26);
+}
+
+.card.pressed { transform: scale(0.95); }
+
+.pegged.dragging .card { opacity: 0.45; }
+
+/* 缩略图 */
+.thumb {
+  width: calc(var(--card-w) - 24px);
+  height: calc(var(--photo-h) - 14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.thumb img,
+.thumb video {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.thumb.dir img,
+.thumb.icon img { width: 64px; height: 64px; }
+
+.thumb .play {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.85);
+  padding-left: 2px;
+  pointer-events: none;
+}
+
+/* 文件名 */
+.name {
+  width: calc(var(--card-w) - 24px);
+  font-size: 10px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+/* 悬停时的 × 取下按钮 */
+.close {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  pointer-events: none;
+}
+
+.card.hover .close { opacity: 1; }
+
+/* “已复制文件”提示 */
+.copied {
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+  display: none;
+  align-items: center;
+  gap: 4px;
+}
+
+.copied.show { display: flex; }

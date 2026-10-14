@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; style-src 'self' file: 'unsafe-inline'; script-src 'self' file:;" />
+  <title>重命名</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "WenQuanYi Micro Hei", "Droid Sans Fallback", Roboto, Arial, sans-serif;
+      font-size: 13px;
+      color: #1c1c1e;
+      background: #f5f5f7;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 18px 20px;
+      gap: 10px;
+    }
+    #title { font-weight: 600; }
+    #message { color: #6e6e73; font-size: 12px; }
+    input {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #d2d2d7;
+      background: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+    input:focus { border-color: #0a84ff; }
+    #actions { display: flex; justify-content: flex-end; gap: 8px; }
+    button {
+      padding: 5px 14px;
+      border-radius: 7px;
+      border: 1px solid #d2d2d7;
+      background: #fff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    button.primary { background: #0a84ff; border-color: #0a84ff; color: #fff; }
+    button:hover { filter: brightness(0.96); }
+  </style>
+</head>
+<body>
+  <div id="title"></div>
+  <div id="message"></div>
+  <input id="value" type="text" />
+  <div id="actions">
+    <button id="cancel">取消</button>
+    <button id="ok" class="primary"></button>
+  </div>
+  <script src="prompt.js"></script>
+</body>
+</html>

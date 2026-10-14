@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; img-src data: file: clothesfile:; style-src 'self' file: 'unsafe-inline'; script-src 'self' file:;" />
+  <title>最近文件</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "WenQuanYi Micro Hei", "Droid Sans Fallback", Roboto, Arial, sans-serif;
+      font-size: 13px;
+      color: #1c1c1e;
+      background: #f5f5f7;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header { padding: 12px 16px 8px; }
+    input[type="search"] {
+      width: 100%;
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1px solid #d2d2d7;
+      background: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+    input[type="search"]:focus { border-color: #0a84ff; }
+    .hint { padding: 0 16px 8px; color: #86868b; font-size: 11px; }
+    ul { list-style: none; overflow-y: auto; flex: 1; padding: 0 8px 12px; }
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 8px;
+      border-radius: 8px;
+    }
+    li:hover { background: rgba(0, 0, 0, 0.05); }
+    li img { width: 28px; height: 28px; flex: 0 0 28px; object-fit: contain; }
+    .meta { flex: 1; min-width: 0; }
+    .meta .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .meta .d { color: #86868b; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    button {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #d2d2d7;
+      background: #fff;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button:hover { background: #f0f0f2; }
+    .empty { padding: 24px 16px; color: #86868b; }
+  </style>
+</head>
+<body>
+  <header>
+    <input id="q" type="search" placeholder="搜索文件名称" autocomplete="off" />
+  </header>
+  <div class="hint">最多保留 200 个近期文件入口；源文件仍在原位置。</div>
+  <ul id="list"></ul>
+  <script src="drawer.js"></script>
+</body>
+</html>

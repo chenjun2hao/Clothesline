@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; img-src clothesfile: data:; media-src clothesfile:; frame-src clothesfile:; object-src clothesfile:; style-src 'self' file: 'unsafe-inline'; script-src 'self' file:;" />
+  <title>预览</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", "PingFang SC", "WenQuanYi Micro Hei", "Droid Sans Fallback", Roboto, Arial, sans-serif;
+      background: #1e1e1e;
+      color: #eee;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    #bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #2c2c2e;
+      border-bottom: 1px solid #3a3a3c;
+      flex: 0 0 auto;
+    }
+    #title { flex: 1; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    button {
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #48484a;
+      background: #3a3a3c;
+      color: #eee;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button:hover { background: #48484a; }
+    #content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      min-height: 0;
+    }
+    #content img, #content video { max-width: 100%; max-height: 100%; object-fit: contain; }
+    #content iframe, #content embed { width: 100%; height: 100%; border: 0; }
+    #content pre {
+      width: 100%; height: 100%; margin: 0; padding: 14px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", "Noto Sans Mono CJK SC", "WenQuanYi Micro Hei", monospace;
+      font-size: 12px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+      color: #d4d4d4; overflow: auto;
+    }
+    .fallback { text-align: center; color: #a1a1a6; }
+    .fallback img { width: 96px; height: 96px; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div id="bar">
+    <div id="title"></div>
+    <button id="open">用默认应用打开</button>
+    <button id="reveal">在文件管理器中显示</button>
+  </div>
+  <div id="content"></div>
+  <script src="preview.js"></script>
+</body>
+</html>
